@@ -1,7 +1,14 @@
 {
   "name": "daily-vue-app-demo",
+  "description": "Video chat app with Daily and Vue.js",
+  "author": "Alan Cleyton <alancleyton67@gmail.com>",
+  "repository": "git@github.com:alancleyton/testing-vue.git",
   "private": true,
   "version": "0.0.0",
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
