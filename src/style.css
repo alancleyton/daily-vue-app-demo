@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*,
+*::before,
+*::after {
+  @apply
+  box-border;
+}
+
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+html, body {
+  @apply
+  p-0 m-0
+  w-full h-full
+  overflow-auto;
+}
+
+body {
+  @apply
+  min-h-screen h-full
+  font-normal text-base text-gray-100 leading-4
+  scroll-smooth antialiased overflow-hidden bg-slate-800;
+}
+
+ol, ul {
+  @apply
+  list-none;
+}
+
+a {
+  @apply
+  no-underline;
+}
+
+h1, h2, h3, h4, h5, h6, span, p, small, a, em, strong {
+  @apply
+  m-0 p-0;
+}
