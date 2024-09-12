@@ -1,23 +1,28 @@
 <template>
-  <div>
-    <h2>Hello World</h2>
-    <p>{{ name }}</p>
-    <p>{{ roomUrl }}</p>
-    <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Click me
-    </button>
+  <div class="flex items-center justify-center w-full h-screen">
+    <template v-if="status === 'idle'">
+      <JoinCallForm />
+    </template>
+    <template v-else>
+      <CallMeeting />
+    </template>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 
+import JoinCallForm from './components/JoinCallForm.vue';
+import CallMeeting from './components/CallMeeting.vue';
+
 export default {
   name: 'App',
+  components: {
+    JoinCallForm,
+    CallMeeting,
+  },
   computed: {
-    ...mapGetters('room', ['name', 'roomUrl']),
+    ...mapGetters('room', ['status', 'name', 'url']),
   },
 };
 </script>
