@@ -1,5 +1,5 @@
-import { room } from './room';
+import { call } from './call';
 
 export const modules = {
-  room,
+  call,
 };

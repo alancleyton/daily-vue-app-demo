@@ -40,7 +40,7 @@ const actions = {
   },
 };
 
-export const room = {
+export const call = {
   state,
   getters,
   mutations,

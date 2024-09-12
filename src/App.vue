@@ -22,7 +22,7 @@ export default {
     CallMeeting,
   },
   computed: {
-    ...mapGetters('room', ['status', 'name', 'url']),
+    ...mapGetters('call', ['status', 'name', 'url']),
   },
 };
 </script>

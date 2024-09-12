@@ -50,7 +50,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions('room', ['joinCall']),
+    ...mapActions('call', ['joinCall']),
 
     joinCallMeeting() {
       this.joinCall({
