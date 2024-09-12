@@ -1,10 +1,10 @@
 <template>
   <div class="flex items-center justify-center w-full h-screen">
     <template v-if="status === 'idle'">
-      <JoinCallForm />
+      <join-call-form />
     </template>
     <template v-else>
-      <CallMeeting />
+      <call-meeting />
     </template>
   </div>
 </template>
