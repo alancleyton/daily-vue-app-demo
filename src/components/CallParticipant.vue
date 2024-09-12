@@ -6,16 +6,14 @@
     </audio>
 
     <template v-if="participant.video">
-      <div class="tracks-wrapper flex items-center gap-3">
-        <div class="track relative w-full h-full">
-          <!-- Video do participante -->
-          <video :srcObject="videoSource" autoPlay muted playsInline></video>
-          <p
-            class="absolute bottom-0 left-0 text-white text-sm bg-slate-600 rounded-md w-fit p-2 m-2"
-          >
-            {{ participantName }}
-          </p>
-        </div>
+      <div class="track relative w-full h-full">
+        <!-- Video do participante -->
+        <video :srcObject="videoSource" autoPlay muted playsInline></video>
+        <p
+          class="absolute bottom-0 left-0 text-white text-sm bg-slate-600 rounded-md w-fit p-2 m-2"
+        >
+          {{ participantName }}
+        </p>
       </div>
     </template>
   </div>
@@ -32,16 +30,25 @@ export default {
   },
   data() {
     return {
-      participantName: 'Guest',
+      participantName: 'Você',
       videoSource: null,
       audioSource: null,
-      username: 'Guest',
     };
   },
   mounted() {
-    this.participantName = this.participant?.user_name;
-    this.createParticipantVideoTrack();
-    this.createParticipantAudioTrack();
+    this.createParticipantVideoTrack(this.participant);
+    this.createParticipantAudioTrack(this.participant);
+  },
+  updated() {
+    // Gera as tracks de vídeo e áudio dos participantes remotos
+
+    // Seta o nome do participante remoto
+    if (!this.participant?.local) {
+      this.participantName = this.participant?.user_name;
+    }
+
+    this.createParticipantVideoTrack(this.participant);
+    this.createParticipantAudioTrack(this.participant);
   },
   methods: {
     // Este método gera as tracks de vídeo e áudio a partir da classe MediaStream do javascript
