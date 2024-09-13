@@ -10,9 +10,15 @@
         <!-- Video do participante -->
         <video :srcObject="videoSource" autoPlay muted playsInline></video>
         <p
-          class="absolute bottom-0 left-0 text-white text-sm bg-slate-600 rounded-md w-fit p-2 m-2"
+          class="absolute flex items-center gap-2 bottom-0 left-0 text-white text-sm bg-slate-600 rounded-md w-fit p-2 m-2"
         >
           {{ participantName }}
+          <template v-if="participant.audio">
+            <img class="h-4" :src="micOn" alt="" />
+          </template>
+          <template v-else>
+            <img class="h-4" :src="micOff" alt="" />
+          </template>
         </p>
       </div>
     </template>
@@ -20,6 +26,11 @@
 </template>
 
 <script>
+import micOff from '../assets/mic_off.svg';
+import micOn from '../assets/mic_on.svg';
+import videoOff from '../assets/vid_off.svg';
+import videoOn from '../assets/vid_on.svg';
+
 export default {
   name: 'CallParticipant',
   props: {
@@ -33,6 +44,10 @@ export default {
       participantName: 'Você',
       videoSource: null,
       audioSource: null,
+      micOn,
+      micOff,
+      videoOn,
+      videoOff,
     };
   },
   mounted() {

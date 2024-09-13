@@ -1,41 +1,55 @@
 <template>
-  <main id="callMeeting" class="call-meeting">
+  <main
+    id="callMeeting"
+    class="relative flex items-center justify-center w-full h-full"
+  >
     <!-- Loader apresentado quando chamada é iniciada -->
     <template v-if="isLoading">
       <dot-loader />
     </template>
 
+    <!-- Lista todos os participantes da chamada -->
     <template v-else>
-      <div class="block">
-        <!-- Lista todos os participantes da chamada -->
-        <div v-if="participants">
-          <template v-for="p in participants" :key="p.session_id">
-            <call-participant :participant="p" />
-          </template>
-        </div>
+      <div v-if="participants" class="flex items-center gap-2">
+        <template v-for="p in participants" :key="p.session_id">
+          <call-participant :participant="p" />
+        </template>
       </div>
+    </template>
+
+    <!-- Botões para controlar o áudio e vídeo do participante local-->
+    <template v-if="localParticipant">
+      <call-controls
+        :participant="localParticipant"
+        :handleAudio="handleAudio"
+        :handleVideo="handleVideo"
+        :handleLeave="leaveAndCleanUp"
+      />
     </template>
   </main>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import daily from '@daily-co/daily-js';
 
 import DotLoader from './DotLoader.vue';
 import CallParticipant from './CallParticipant.vue';
+import CallControls from './CallControls.vue';
 
 export default {
   name: 'CallMeeting',
   components: {
     DotLoader,
     CallParticipant,
+    CallControls,
   },
   data() {
     return {
       isLoading: false,
       callObject: null,
       participants: null,
+      localParticipant: null,
       screen: null,
     };
   },
@@ -63,6 +77,8 @@ export default {
       .on('participant-left', this.updateParticpants);
   },
   methods: {
+    ...mapActions('call', ['leaveCall']),
+
     // Método chamado ao iniciar a chamada, apresenta o loading na tela
     handleJoiningMeeting() {
       this.isLoading = true;
@@ -78,8 +94,11 @@ export default {
       const participants = this.callObject.participants();
       this.participants = Object.values(participants);
 
-      // TODO: Isso faz oque?
-      // Filtra os participantes com video track
+      // Seta o participante local
+      this.localParticipant = this.participants.find(
+        participant => participant.local,
+      );
+
       const screen = this.participants.filter(
         participant => participant.screenVideoTrack,
       );
@@ -92,6 +111,24 @@ export default {
       }
 
       this.isLoading = false;
+    },
+    // Método chamado para ligar e desligar o audio do participente local
+    handleAudio() {
+      const audioOn = this.callObject.localAudio();
+      this.callObject.setLocalAudio(!audioOn);
+    },
+    // Método chamado para ligar e desligar a câmera do participente local
+    handleVideo() {
+      const videoOn = this.callObject.localVideo();
+      this.callObject.setLocalVideo(!videoOn);
+    },
+    // Método chamado para sair da chamada
+    leaveAndCleanUp() {
+      this.callObject.leave().then(() => {
+        // Destrói o objeto instanciado da chamada.
+        this.callObject.destroy();
+        this.leaveCall();
+      });
     },
   },
   computed: {
