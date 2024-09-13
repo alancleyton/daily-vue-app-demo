@@ -50,7 +50,6 @@ export default {
       callObject: null,
       participants: null,
       localParticipant: null,
-      screen: null,
     };
   },
   mounted() {
@@ -76,6 +75,15 @@ export default {
       .on('participant-updated', this.updateParticpants)
       .on('participant-left', this.updateParticpants);
   },
+  unmounted() {
+    // Limpa os eventos do daily ao desmontar o componente
+    this.callObject
+      .off('joining-meeting', this.handleJoiningMeeting)
+      .off('joined-meeting', this.updateParticpants)
+      .off('participant-joined', this.updateParticpants)
+      .off('participant-updated', this.updateParticpants)
+      .off('participant-left', this.updateParticpants);
+  },
   methods: {
     ...mapActions('call', ['leaveCall']),
 
@@ -84,9 +92,7 @@ export default {
       this.isLoading = true;
     },
     // Esse método é chamado para cada participante que entra na chamada
-    updateParticpants(e) {
-      // console.log('[EVENT] ', e);
-
+    updateParticpants() {
       // O Método não faz nada se o callObject não estiver instanciado
       if (!this.callObject) return;
 
@@ -98,17 +104,6 @@ export default {
       this.localParticipant = this.participants.find(
         participant => participant.local,
       );
-
-      const screen = this.participants.filter(
-        participant => participant.screenVideoTrack,
-      );
-
-      if (screen?.length && !this.screen) {
-        // console.log('[SCREEN]', screen);
-        this.screen = screen[0];
-      } else if (!screen?.length && this.screen) {
-        this.screen = null;
-      }
 
       this.isLoading = false;
     },
